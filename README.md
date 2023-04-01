@@ -1,27 +1,3 @@
 # galang-dana
 
-- cmd/
-  - main.go
-- internal/
-  - domain/
-    - model/
-    - repository/
-      - mysql/
-    - usecase/
-  - interfaces/
-    - delivery/
-      - http/
-        - handler/
-        - middleware/
-        - router.go
-    - persistence/
-      - mysql/
-        - repository.go
-- pkg/
-  - config/
-  - database/
-  - logger/
-  - middleware/
-- scripts/
-  - migration/
-- test/
+Create a mini project for Backend Rest API for mini crowdfunding
