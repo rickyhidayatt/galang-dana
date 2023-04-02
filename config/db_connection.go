@@ -14,7 +14,7 @@ func ConnectDB() (*gorm.DB, error) {
 
 	err := godotenv.Load()
 	if err != nil {
-		panic(err.Error())
+		log.Fatal(err)
 	}
 
 	dbHost := os.Getenv("DB_HOST")
