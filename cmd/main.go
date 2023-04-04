@@ -15,12 +15,26 @@ func main() {
 
 	user := usecase.NewUserUsecase(repo)
 
+	// login := input.LoginUser{
+	// 	Email:    "rachesl@mail.com",
+	// 	Password: "rachel",
+	// }
+	// usr, err := user.Login(login)
+	// if err != nil {
+	// 	fmt.Println("ada error")
+	// 	fmt.Println(err.Error())
+	// }
+	// fmt.Println(usr.Email)
+	// fmt.Println(usr.Name)
+
 	userHandler := handler.NewUserHandler(user)
 
 	router := gin.Default()
 	api := router.Group("api/v1")
 
 	api.POST("/users", userHandler.RegisterUser)
+	api.POST("/login", userHandler.LoginUser)
+
 	router.Run()
 
 }

@@ -12,6 +12,7 @@ import (
 
 type UserUseCase interface {
 	Register(input input.RegisterUserInput) (model.User, error)
+	Login(input input.LoginUser) (model.User, error)
 }
 
 type userUseCase struct {
@@ -44,4 +45,26 @@ func (s *userUseCase) Register(input input.RegisterUserInput) (model.User, error
 	}
 
 	return newUser, nil
+}
+
+func (s *userUseCase) Login(input input.LoginUser) (model.User, error) {
+	email := input.Email
+	pasword := input.Password
+
+	user, err := s.userRepo.FindEmail(email)
+	if err != nil {
+		return user, errors.New("no user found on that email")
+	}
+
+	checkId, err := s.userRepo.FindByID(user.Id)
+	if err != nil {
+		return checkId, errors.New("no user id found on that email")
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(pasword))
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
 }
