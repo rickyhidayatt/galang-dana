@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"errors"
+
 	"github.com/galang-dana/domain/input"
 	"github.com/galang-dana/domain/model"
 	"github.com/galang-dana/domain/repository"
@@ -38,7 +40,7 @@ func (s *userUseCase) Register(input input.RegisterUserInput) (model.User, error
 
 	newUser, err := s.userRepo.SaveUser(user)
 	if err != nil {
-		return newUser, err
+		return newUser, errors.New("faild register user")
 	}
 
 	return newUser, nil

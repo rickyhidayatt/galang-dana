@@ -1,4 +1,4 @@
-package config
+package database
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func ConnectDB() (*gorm.DB, error) {
+func Connect() (*gorm.DB, error) {
 
 	err := godotenv.Load()
 	if err != nil {
