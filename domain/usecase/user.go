@@ -13,6 +13,7 @@ import (
 type UserUseCase interface {
 	Register(input input.RegisterUserInput) (model.User, error)
 	Login(input input.LoginUser) (model.User, error)
+	EmailAvaliable(input input.CheckEmail) (bool, error)
 }
 
 type userUseCase struct {
@@ -67,4 +68,18 @@ func (s *userUseCase) Login(input input.LoginUser) (model.User, error) {
 	}
 
 	return user, nil
+}
+
+func (s *userUseCase) EmailAvaliable(input input.CheckEmail) (bool, error) {
+	email := input.Email
+	user, err := s.userRepo.CheckEmail(email)
+	if err != nil {
+		return false, errors.New("e-mail has been used")
+	}
+
+	if user.Id == "" {
+		return true, nil
+	}
+
+	return false, nil
 }

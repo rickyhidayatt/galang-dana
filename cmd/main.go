@@ -15,17 +15,16 @@ func main() {
 
 	user := usecase.NewUserUsecase(repo)
 
-	// login := input.LoginUser{
-	// 	Email:    "rachesl@mail.com",
-	// 	Password: "rachel",
+	// login := input.CheckEmail{
+	// 	Email: "rachel@mail.com",
 	// }
-	// usr, err := user.Login(login)
+	// usr, err := user.EmailAvaliable(login)
 	// if err != nil {
 	// 	fmt.Println("ada error")
 	// 	fmt.Println(err.Error())
 	// }
-	// fmt.Println(usr.Email)
-	// fmt.Println(usr.Name)
+	// fmt.Println(usr)
+	// fmt.Println("Bisa digunakan")
 
 	userHandler := handler.NewUserHandler(user)
 
@@ -34,6 +33,7 @@ func main() {
 
 	api.POST("/users", userHandler.RegisterUser)
 	api.POST("/login", userHandler.LoginUser)
+	api.POST("/email-check", userHandler.CheckEmail)
 
 	router.Run()
 
