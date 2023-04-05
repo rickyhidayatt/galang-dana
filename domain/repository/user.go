@@ -10,6 +10,7 @@ type UserRepository interface {
 	FindEmail(email string) (model.User, error)
 	FindByID(id string) (model.User, error)
 	CheckEmail(email string) (model.User, error)
+	Update(input model.User) (model.User, error)
 }
 
 type userRepository struct {
@@ -53,5 +54,14 @@ func (u *userRepository) CheckEmail(email string) (model.User, error) {
 	if err != nil {
 		return user, err
 	}
+	return user, nil
+}
+
+func (u *userRepository) Update(user model.User) (model.User, error) {
+	err := u.db.Save(&user).Error
+	if err != nil {
+		return user, err
+	}
+
 	return user, nil
 }

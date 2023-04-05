@@ -14,6 +14,7 @@ type UserUseCase interface {
 	Register(input input.RegisterUserInput) (model.User, error)
 	Login(input input.LoginUser) (model.User, error)
 	EmailAvaliable(input input.CheckEmail) (bool, error)
+	SaveAvatar(Id string, FileLocation string) (model.User, error)
 }
 
 type userUseCase struct {
@@ -82,4 +83,20 @@ func (s *userUseCase) EmailAvaliable(input input.CheckEmail) (bool, error) {
 	}
 
 	return false, nil
+}
+
+func (s *userUseCase) SaveAvatar(Id string, FileLocation string) (model.User, error) {
+
+	user, err := s.userRepo.FindByID(Id)
+	if err != nil {
+		return user, err
+	}
+
+	user.AvatarFileName = FileLocation
+	userUpdate, err := s.userRepo.Update(user)
+	if err != nil {
+		return userUpdate, err
+	}
+
+	return userUpdate, nil
 }
