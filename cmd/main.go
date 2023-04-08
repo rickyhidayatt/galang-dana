@@ -4,6 +4,7 @@ import (
 	"github.com/galang-dana/database"
 	"github.com/galang-dana/domain/repository"
 	"github.com/galang-dana/domain/usecase"
+	"github.com/galang-dana/interfaces/delivery/auth"
 	"github.com/galang-dana/interfaces/delivery/handler"
 	"github.com/gin-gonic/gin"
 )
@@ -14,6 +15,7 @@ func main() {
 	repo := repository.NewUserRepository(db)
 
 	user := usecase.NewUserUsecase(repo)
+	auth := auth.NewService()
 
 	// login := input.CheckEmail{
 	// 	Email: "rachel@mail.com",
@@ -26,7 +28,7 @@ func main() {
 	// fmt.Println(usr)
 	// fmt.Println("Bisa digunakan")
 
-	userHandler := handler.NewUserHandler(user)
+	userHandler := handler.NewUserHandler(user, auth)
 
 	router := gin.Default()
 	api := router.Group("api/v1")

@@ -3,18 +3,21 @@ package handler
 import (
 	"net/http"
 
+	"github.com/galang-dana/domain/formatter"
 	"github.com/galang-dana/domain/input"
 	"github.com/galang-dana/domain/usecase"
+	"github.com/galang-dana/interfaces/delivery/auth"
 	"github.com/galang-dana/utils"
 	"github.com/gin-gonic/gin"
 )
 
 type userHandler struct {
 	userUsecase usecase.UserUseCase
+	authService auth.Service
 }
 
-func NewUserHandler(userUC usecase.UserUseCase) *userHandler {
-	return &userHandler{userUC}
+func NewUserHandler(userUC usecase.UserUseCase, authSvc auth.Service) *userHandler {
+	return &userHandler{userUC, authSvc}
 }
 
 func (h *userHandler) RegisterUser(c *gin.Context) {
@@ -29,12 +32,21 @@ func (h *userHandler) RegisterUser(c *gin.Context) {
 
 	registerUser, err := h.userUsecase.Register(input)
 	if err != nil {
-		response := utils.ApiResponse("failed register your account", http.StatusInternalServerError, "error", err.Error())
+		response := utils.ApiResponse("failed register your account", http.StatusInternalServerError, "error duplicate email", err.Error())
 		c.JSON(http.StatusInternalServerError, response)
 		return
 	}
 
-	response := utils.ApiResponse("successfully register your account", http.StatusOK, "success", registerUser)
+	token, err := h.authService.GenerateToken(registerUser.Id)
+	if err != nil {
+		response := utils.ApiResponse("failed register your account", http.StatusBadRequest, "auth error", err.Error())
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	formatter := formatter.FormatUser(registerUser, token)
+
+	response := utils.ApiResponse("successfully register your account", http.StatusOK, "success", formatter)
 	c.JSON(http.StatusOK, response)
 
 }
@@ -60,7 +72,16 @@ func (h *userHandler) LoginUser(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, response)
 		return
 	}
-	response := utils.ApiResponse("successfully login", http.StatusOK, "success", loginUser)
+
+	token, err := h.authService.GenerateToken(loginUser.Id)
+	if err != nil {
+		response := utils.ApiResponse("failed login your account", http.StatusBadRequest, "auth login error", err.Error())
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+	formatter := formatter.FormatUser(loginUser, token)
+
+	response := utils.ApiResponse("successfully login", http.StatusOK, "success", formatter)
 	c.JSON(http.StatusOK, response)
 }
 
@@ -121,6 +142,7 @@ func (h *userHandler) UploadAvatar(c *gin.Context) {
 		return
 	}
 
+	//jwt
 	userId := "c7a626ab48cc419399b5c662e6a9043"
 
 	_, err = h.userUsecase.SaveAvatar(userId, folderSave)

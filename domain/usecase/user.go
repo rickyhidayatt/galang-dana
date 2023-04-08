@@ -15,6 +15,7 @@ type UserUseCase interface {
 	Login(input input.LoginUser) (model.User, error)
 	EmailAvaliable(input input.CheckEmail) (bool, error)
 	SaveAvatar(Id string, FileLocation string) (model.User, error)
+	GetUserById(id string) (model.User, error)
 }
 
 type userUseCase struct {
@@ -99,4 +100,17 @@ func (s *userUseCase) SaveAvatar(Id string, FileLocation string) (model.User, er
 	}
 
 	return userUpdate, nil
+}
+
+func (s *userUseCase) GetUserById(id string) (model.User, error) {
+	user, err := s.userRepo.FindByID(id)
+	if err != nil {
+		return user, err
+	}
+
+	if user.Id == "" {
+		return user, errors.New("no user found with that id")
+	}
+
+	return user, nil
 }
