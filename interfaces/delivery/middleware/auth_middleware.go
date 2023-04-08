@@ -7,7 +7,6 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/galang-dana/domain/usecase"
 	"github.com/galang-dana/interfaces/delivery/auth"
-	"github.com/galang-dana/interfaces/domain/usecase"
 	"github.com/galang-dana/utils"
 	"github.com/gin-gonic/gin"
 )
@@ -42,9 +41,8 @@ func AuthMiddleware(authService auth.Service, userService usecase.UserUseCase) g
 			return
 		}
 
-		userId := claim["user_id"] // yang ini
-
-		user, err := userService.GetUserById(userId) // ubah dari interface{} ke tipe data string
+		userId := claim["user_id"].(string)
+		user, err := userService.GetUserById(userId)
 		if err != nil {
 			response := utils.ApiResponse("Unauthorized", http.StatusUnauthorized, "error", nil)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
