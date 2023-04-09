@@ -34,6 +34,7 @@ func AuthMiddleware(authService auth.Service, userService usecase.UserUseCase) g
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
 			return
 		}
+
 		claim, ok := token.Claims.(jwt.MapClaims)
 		if !ok || !token.Valid {
 			response := utils.ApiResponse("Unauthorized", http.StatusUnauthorized, "error", nil)

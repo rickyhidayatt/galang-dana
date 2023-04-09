@@ -1,10 +1,12 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/galang-dana/domain/formatter"
 	"github.com/galang-dana/domain/input"
+	"github.com/galang-dana/domain/model"
 	"github.com/galang-dana/domain/usecase"
 	"github.com/galang-dana/interfaces/delivery/auth"
 	"github.com/galang-dana/utils"
@@ -130,7 +132,10 @@ func (h *userHandler) UploadAvatar(c *gin.Context) {
 		return
 	}
 
-	folderSave := "../images/" + file.Filename
+	//jwt
+	middlewareUser := c.MustGet("currentUser").(model.User)
+	userId := middlewareUser.Id
+	folderSave := fmt.Sprintf("../images/%s-%s", userId, file.Filename)
 
 	err = c.SaveUploadedFile(file, folderSave)
 	if err != nil {
@@ -141,9 +146,6 @@ func (h *userHandler) UploadAvatar(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-
-	//jwt
-	userId := "c7a626ab48cc419399b5c662e6a9043"
 
 	_, err = h.userUsecase.SaveAvatar(userId, folderSave)
 	if err != nil {
