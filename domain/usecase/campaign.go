@@ -6,7 +6,7 @@ import (
 )
 
 type CampaignUseCase interface {
-	FindCampaigns(userId string) ([]model.Campaign, error)
+	GetCampaigns(userId string) ([]model.Campaign, error)
 }
 
 type campaignUseCase struct {
@@ -17,7 +17,7 @@ func NewCampaignUseCase(r repository.CampaignRepository) CampaignUseCase {
 	return &campaignUseCase{r}
 }
 
-func (c *campaignUseCase) FindCampaigns(userId string) ([]model.Campaign, error) {
+func (c *campaignUseCase) GetCampaigns(userId string) ([]model.Campaign, error) {
 	if userId == "" {
 		campaigns, err := c.CampaignRepo.FindAll()
 		if err != nil {
