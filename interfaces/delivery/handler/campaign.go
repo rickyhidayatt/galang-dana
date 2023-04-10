@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 
+	"github.com/galang-dana/domain/formatter"
 	"github.com/galang-dana/domain/usecase"
 	"github.com/galang-dana/utils"
 	"github.com/gin-gonic/gin"
@@ -25,7 +26,7 @@ func (ca *campaignHandler) GetCampaigns(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-	response := utils.ApiResponse("List of campaigns", http.StatusOK, "success", campaigns)
+	response := utils.ApiResponse("List of campaigns", http.StatusOK, "success", formatter.FormatCampaigns(campaigns))
 	c.JSON(http.StatusOK, response)
 
 }
