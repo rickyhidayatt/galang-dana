@@ -21,7 +21,7 @@ func NewCampaignRepository(g *gorm.DB) CampaignRepository {
 func (c *campaignRepository) FindAll() ([]model.Campaign, error) {
 
 	var campaigns []model.Campaign
-	err := c.db.Find(&campaigns).Error
+	err := c.db.Preload("Images", "images.is_primary = true").Find(&campaigns).Error
 	if err != nil {
 		return campaigns, err
 	}
@@ -30,7 +30,7 @@ func (c *campaignRepository) FindAll() ([]model.Campaign, error) {
 
 func (c *campaignRepository) FindById(userId string) ([]model.Campaign, error) {
 	var campaigns []model.Campaign
-	err := c.db.Where("user_id = ?", userId).Find(&campaigns).Error
+	err := c.db.Where("user_id = ?", userId).Preload("Images", "images.is_primary = true").Find(&campaigns).Error
 	if err != nil {
 		return campaigns, err
 	}

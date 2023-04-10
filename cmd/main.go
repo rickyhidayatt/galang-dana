@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/galang-dana/database"
 	"github.com/galang-dana/domain/repository"
 )
@@ -16,7 +18,15 @@ func main() {
 	//camapaign
 	repoCampaign := repository.NewCampaignRepository(db)
 
-	repoCampaign.FindAll()
+	cek, _ := repoCampaign.FindById("f243c33d14244256bb122a5015834e15")
+	for _, v := range cek {
+
+		fmt.Println(v.Name)
+		if len(v.Images) > 0 {
+			fmt.Println(v.Images[0].FileName)
+			fmt.Println("Jumlah gambar : ", len(v.Images))
+		}
+	}
 
 	// userHandler := handler.NewUserHandler(user, auth)
 
