@@ -51,6 +51,6 @@ func (ca *campaignHandler) GetCampaign(c *gin.Context) {
 		return
 	}
 
-	response := utils.ApiResponse("Campaign Detail", http.StatusOK, "success", campaign)
+	response := utils.ApiResponse("Campaign Detail", http.StatusOK, "success", formatter.FormatCampaignDetail(campaign))
 	c.JSON(http.StatusOK, response)
 }
