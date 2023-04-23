@@ -1,12 +1,14 @@
 package usecase
 
 import (
+	"github.com/galang-dana/domain/input"
 	"github.com/galang-dana/domain/model"
 	"github.com/galang-dana/domain/repository"
 )
 
 type CampaignUseCase interface {
 	GetCampaigns(userId string) ([]model.Campaign, error)
+	GetCampaignById(input input.GetCampaignDetailInput) (model.Campaign, error)
 }
 
 type campaignUseCase struct {
@@ -30,4 +32,12 @@ func (c *campaignUseCase) GetCampaigns(userId string) ([]model.Campaign, error) 
 		return campaigns, err
 	}
 	return campaigns, nil
+}
+
+func (c *campaignUseCase) GetCampaignById(input input.GetCampaignDetailInput) (model.Campaign, error) {
+	campaign, err := c.CampaignRepo.FindCampaignById(input.ID)
+	if err != nil {
+		return campaign, err
+	}
+	return campaign, nil
 }

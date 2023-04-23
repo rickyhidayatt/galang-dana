@@ -8,6 +8,7 @@ import (
 type CampaignRepository interface {
 	FindAll() ([]model.Campaign, error)
 	FindById(userId string) ([]model.Campaign, error)
+	FindCampaignById(userId string) (model.Campaign, error)
 }
 
 type campaignRepository struct {
@@ -35,4 +36,14 @@ func (c *campaignRepository) FindById(userId string) ([]model.Campaign, error) {
 		return campaigns, err
 	}
 	return campaigns, nil
+}
+
+func (c *campaignRepository) FindCampaignById(userId string) (model.Campaign, error) {
+	var campaign model.Campaign
+
+	err := c.db.Preload("User").Preload("Images").Where("id = ?", userId).Error
+	if err != nil {
+		return campaign, err
+	}
+	return campaign, nil
 }
