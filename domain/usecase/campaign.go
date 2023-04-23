@@ -39,5 +39,6 @@ func (c *campaignUseCase) GetCampaignById(input input.GetCampaignDetailInput) (m
 	if err != nil {
 		return campaign, err
 	}
+
 	return campaign, nil
 }

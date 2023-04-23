@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"log"
+
 	"github.com/galang-dana/domain/model"
 	"gorm.io/gorm"
 )
@@ -41,9 +43,11 @@ func (c *campaignRepository) FindById(userId string) ([]model.Campaign, error) {
 func (c *campaignRepository) FindCampaignById(userId string) (model.Campaign, error) {
 	var campaign model.Campaign
 
-	err := c.db.Preload("User").Preload("Images").Where("id = ?", userId).Error
+	err := c.db.Where("user_id = ?", userId).Preload("User").Preload("Images").Find(&campaign).Error
 	if err != nil {
+		log.Fatal(err)
 		return campaign, err
 	}
+
 	return campaign, nil
 }
