@@ -5,6 +5,7 @@ import (
 
 	"github.com/galang-dana/domain/formatter"
 	"github.com/galang-dana/domain/input"
+	"github.com/galang-dana/domain/model"
 	"github.com/galang-dana/domain/usecase"
 	"github.com/galang-dana/utils"
 	"github.com/gin-gonic/gin"
@@ -52,5 +53,28 @@ func (ca *campaignHandler) GetCampaign(c *gin.Context) {
 	}
 
 	response := utils.ApiResponse("Campaign Detail", http.StatusOK, "success", formatter.FormatCampaignDetail(campaign))
+	c.JSON(http.StatusOK, response)
+}
+
+func (ca *campaignHandler) CreateCampaign(c *gin.Context) {
+	var input input.CreateCampaign
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		errors := utils.FormatValidatorError(err)
+		errorsMessage := gin.H{"error": errors}
+		response := utils.ApiResponse("failed to create campaign", http.StatusUnprocessableEntity, "error", errorsMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+	currentUser := c.MustGet("currentUser").(model.User)
+	input.User = currentUser
+
+	newCampaign, err := ca.campaignUsecase.CreateCampaign(input)
+	if err != nil {
+		response := utils.ApiResponse("failed to create campaign", http.StatusBadRequest, "error", err.Error())
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+	response := utils.ApiResponse("success to create campaign", http.StatusOK, "success", formatter.FormatCampaign(newCampaign))
 	c.JSON(http.StatusOK, response)
 }

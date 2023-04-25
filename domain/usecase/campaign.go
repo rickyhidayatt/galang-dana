@@ -1,14 +1,19 @@
 package usecase
 
 import (
+	"fmt"
+
 	"github.com/galang-dana/domain/input"
 	"github.com/galang-dana/domain/model"
 	"github.com/galang-dana/domain/repository"
+	"github.com/galang-dana/utils"
+	"github.com/gosimple/slug"
 )
 
 type CampaignUseCase interface {
 	GetCampaigns(userId string) ([]model.Campaign, error)
 	GetCampaignById(input input.GetCampaignDetailInput) (model.Campaign, error)
+	CreateCampaign(inpt input.CreateCampaign) (model.Campaign, error)
 }
 
 type campaignUseCase struct {
@@ -41,4 +46,30 @@ func (c *campaignUseCase) GetCampaignById(input input.GetCampaignDetailInput) (m
 	}
 
 	return campaign, nil
+}
+
+func (c *campaignUseCase) CreateCampaign(inpt input.CreateCampaign) (model.Campaign, error) {
+
+	src := fmt.Sprintf("%s %s", inpt.Name, inpt.User.Id)
+	slugData := slug.Make(src)
+
+	campaign := model.Campaign{
+		Id:               utils.GenerateId(),
+		Name:             inpt.Name,
+		Description:      inpt.Description,
+		ShortDescription: inpt.ShortDescription,
+		Perks:            inpt.Perks,
+		GoalAmount:       inpt.GoalAmount,
+		UserId:           inpt.User.Id,
+		Slug:             slugData,
+	}
+
+	newCampaign, err := c.CampaignRepo.Save(campaign)
+	if err != nil {
+		fmt.Println("ADA EROR DI SERVICE")
+		return newCampaign, err
+	}
+
+	return newCampaign, nil
+
 }

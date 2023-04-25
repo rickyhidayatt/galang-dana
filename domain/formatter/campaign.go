@@ -17,7 +17,7 @@ type CampaignFormater struct {
 	Slug             string `json:"slug"`
 }
 
-func formatCampaign(campaign model.Campaign) CampaignFormater {
+func FormatCampaign(campaign model.Campaign) CampaignFormater {
 	campaignFormatter := CampaignFormater{
 		Id:               campaign.Id,
 		UserId:           campaign.UserId,
@@ -40,7 +40,7 @@ func FormatCampaigns(campaigns []model.Campaign) []CampaignFormater {
 
 	campaign := []CampaignFormater{}
 	for _, c := range campaigns {
-		camp := formatCampaign(c)
+		camp := FormatCampaign(c)
 		campaign = append(campaign, camp)
 	}
 
