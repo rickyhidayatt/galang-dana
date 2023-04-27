@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/galang-dana/domain/input"
@@ -14,6 +15,7 @@ type CampaignUseCase interface {
 	GetCampaigns(userId string) ([]model.Campaign, error)
 	GetCampaignById(input input.GetCampaignDetailInput) (model.Campaign, error)
 	CreateCampaign(inpt input.CreateCampaign) (model.Campaign, error)
+	UpdateCampaign(idCampaign input.GetCampaignDetailInput, inputData input.CreateCampaign) (model.Campaign, error)
 }
 
 type campaignUseCase struct {
@@ -32,7 +34,7 @@ func (c *campaignUseCase) GetCampaigns(userId string) ([]model.Campaign, error) 
 		}
 		return campaigns, nil
 	}
-	campaigns, err := c.CampaignRepo.FindById(userId)
+	campaigns, err := c.CampaignRepo.FindByUserId(userId)
 	if err != nil {
 		return campaigns, err
 	}
@@ -44,7 +46,6 @@ func (c *campaignUseCase) GetCampaignById(input input.GetCampaignDetailInput) (m
 	if err != nil {
 		return campaign, err
 	}
-
 	return campaign, nil
 }
 
@@ -66,10 +67,26 @@ func (c *campaignUseCase) CreateCampaign(inpt input.CreateCampaign) (model.Campa
 
 	newCampaign, err := c.CampaignRepo.Save(campaign)
 	if err != nil {
-		fmt.Println("ADA EROR DI SERVICE")
 		return newCampaign, err
 	}
-
 	return newCampaign, nil
+}
 
+func (c *campaignUseCase) UpdateCampaign(campaignID input.GetCampaignDetailInput, campaignData input.CreateCampaign) (model.Campaign, error) {
+	campaign, err := c.CampaignRepo.FindCampaignById(campaignID.ID)
+	if err != nil {
+		return campaign, errors.New("unauthorized id nya")
+	}
+
+	campaign.Name = campaignData.Name
+	campaign.Description = campaignData.Description
+	campaign.ShortDescription = campaignData.ShortDescription
+	campaign.Perks = campaignData.Perks
+	campaign.GoalAmount = campaignData.GoalAmount
+
+	updateCampaign, err := c.CampaignRepo.Update(campaign)
+	if err != nil {
+		return updateCampaign, errors.New("failed to update campaign")
+	}
+	return updateCampaign, nil
 }
