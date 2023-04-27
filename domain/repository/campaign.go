@@ -13,6 +13,8 @@ type CampaignRepository interface {
 	FindCampaignById(userId string) (model.Campaign, error)
 	Save(campaign model.Campaign) (model.Campaign, error)
 	Update(campaign model.Campaign) (model.Campaign, error)
+	CreateImage(campaignImage model.Image) (model.Image, error)
+	MarkAllImagesAsNonPrimary(campaignID string) (bool, error)
 }
 
 type campaignRepository struct {
@@ -41,6 +43,7 @@ func (c *campaignRepository) FindAll() ([]model.Campaign, error) {
 //		}
 //		return campaigns, nil
 //	}
+
 func (c *campaignRepository) FindByUserId(userID string) ([]model.Campaign, error) {
 	var campaigns []model.Campaign
 	err := c.db.Where("user_id = ?", userID).Find(&campaigns).Error
@@ -112,4 +115,20 @@ func (c *campaignRepository) Update(campaign model.Campaign) (model.Campaign, er
 		return campaign, err
 	}
 	return campaign, nil
+}
+
+func (c *campaignRepository) CreateImage(campaignImage model.Image) (model.Image, error) {
+	err := c.db.Create(&campaignImage).Error
+	if err != nil {
+		return campaignImage, err
+	}
+	return campaignImage, nil
+}
+
+func (c *campaignRepository) MarkAllImagesAsNonPrimary(campaignID string) (bool, error) {
+	err := c.db.Model(&model.Image{}).Where("campaign_id = ?", campaignID).Update("is_primary", false).Error
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }

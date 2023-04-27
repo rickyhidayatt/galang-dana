@@ -16,6 +16,7 @@ type CampaignUseCase interface {
 	GetCampaignById(input input.GetCampaignDetailInput) (model.Campaign, error)
 	CreateCampaign(inpt input.CreateCampaign) (model.Campaign, error)
 	UpdateCampaign(idCampaign input.GetCampaignDetailInput, inputData input.CreateCampaign) (model.Campaign, error)
+	// SaveCampaignImage(inpt input.CreateCampaignImageInput, fileLocation string) (model.Image, error)
 }
 
 type campaignUseCase struct {
@@ -94,3 +95,7 @@ func (c *campaignUseCase) UpdateCampaign(campaignID input.GetCampaignDetailInput
 	}
 	return updateCampaign, nil
 }
+
+// func (c *campaignUseCase) SaveCampaignImage(inpt input.CreateCampaignImageInput, fileLocation string) (model.Image, error) {
+// 	campaign, err := c.CampaignRepo.FindCampaignById(inpt.CampaignID)
+// }
