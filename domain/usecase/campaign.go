@@ -78,6 +78,10 @@ func (c *campaignUseCase) UpdateCampaign(campaignID input.GetCampaignDetailInput
 		return campaign, errors.New("unauthorized id nya")
 	}
 
+	if campaign.UserId != campaignData.User.Id {
+		return campaign, errors.New("not an owner of the campaign")
+	}
+
 	campaign.Name = campaignData.Name
 	campaign.Description = campaignData.Description
 	campaign.ShortDescription = campaignData.ShortDescription
