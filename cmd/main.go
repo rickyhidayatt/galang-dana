@@ -38,6 +38,7 @@ func main() {
 	api.GET("/campaigns/:id", campaignHandler.GetCampaignById)
 	api.POST("/campaigns", middleware.AuthMiddleware(auth, user), campaignHandler.CreateCampaign)
 	api.PUT("/campaigns/:id", middleware.AuthMiddleware(auth, user), campaignHandler.UpdateCampaign)
+	api.POST("/campaign-images", middleware.AuthMiddleware(auth, user), campaignHandler.UploadImage)
 
 	api.GET("/")
 

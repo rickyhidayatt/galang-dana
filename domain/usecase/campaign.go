@@ -16,7 +16,7 @@ type CampaignUseCase interface {
 	GetCampaignById(input input.GetCampaignDetailInput) (model.Campaign, error)
 	CreateCampaign(inpt input.CreateCampaign) (model.Campaign, error)
 	UpdateCampaign(idCampaign input.GetCampaignDetailInput, inputData input.CreateCampaign) (model.Campaign, error)
-	// SaveCampaignImage(inpt input.CreateCampaignImageInput, fileLocation string) (model.Image, error)
+	SaveCampaignImage(input input.CreateCampaignImageInput, fileLocation string) (model.Image, error)
 }
 
 type campaignUseCase struct {
@@ -96,6 +96,35 @@ func (c *campaignUseCase) UpdateCampaign(campaignID input.GetCampaignDetailInput
 	return updateCampaign, nil
 }
 
-// func (c *campaignUseCase) SaveCampaignImage(inpt input.CreateCampaignImageInput, fileLocation string) (model.Image, error) {
-// 	campaign, err := c.CampaignRepo.FindCampaignById(inpt.CampaignID)
-// }
+func (c *campaignUseCase) SaveCampaignImage(input input.CreateCampaignImageInput, fileLocation string) (model.Image, error) {
+	campaign, err := c.CampaignRepo.FindCampaignById(input.CampaignID)
+	if err != nil {
+		return model.Image{}, err
+	}
+
+	if campaign.UserId != input.User.Id {
+		return model.Image{}, errors.New("id not have campaign")
+	}
+
+	isPrimary := false
+	if input.IsPrimary {
+		isPrimary = true
+		_, err := c.CampaignRepo.MarkAllImagesAsNonPrimary(input.CampaignID)
+		if err != nil {
+			return model.Image{}, errors.New("campaign id not found")
+		}
+	}
+
+	campaignImage := model.Image{}
+	campaignImage.Id = utils.GenerateId()
+	campaignImage.CampaignId = input.CampaignID
+	campaignImage.IsPrimary = isPrimary
+	campaignImage.FileName = fileLocation
+
+	newCampaignImage, err := c.CampaignRepo.CreateImage(campaignImage)
+	if err != nil {
+		return newCampaignImage, errors.New("failed to save image")
+	}
+
+	return newCampaignImage, nil
+}

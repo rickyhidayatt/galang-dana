@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/galang-dana/domain/formatter"
@@ -108,5 +109,51 @@ func (ca *campaignHandler) UpdateCampaign(c *gin.Context) {
 	}
 
 	response := utils.ApiResponse("success to create campaign", http.StatusOK, "success", formatter.FormatCampaign(updateCampaign))
+	c.JSON(http.StatusOK, response)
+}
+
+func (ca *campaignHandler) UploadImage(c *gin.Context) {
+	var input input.CreateCampaignImageInput
+	err := c.ShouldBind(&input)
+	if err != nil {
+		errors := utils.FormatValidatorError(err)
+		errorsMessage := gin.H{"error": errors}
+		response := utils.ApiResponse("failed to upload image", http.StatusUnprocessableEntity, "error", errorsMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	currentUser := c.MustGet("currentUser").(model.User)
+	input.User = currentUser
+	userID := currentUser.Id
+
+	file, err := c.FormFile("file")
+	if err != nil {
+		errorsMessage := gin.H{"is_uploaded": false}
+		response := utils.ApiResponse("failed to upload campaign image", http.StatusBadRequest, "error", errorsMessage)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	path := fmt.Sprintf("../images/%s-%s", userID, file.Filename)
+
+	err = c.SaveUploadedFile(file, path)
+	if err != nil {
+		errorsMessage := gin.H{"is_uploaded": false}
+		response := utils.ApiResponse("failed to upload image", http.StatusBadRequest, "error", errorsMessage)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	_, err = ca.campaignUsecase.SaveCampaignImage(input, path)
+	if err != nil {
+		errorsMessage := gin.H{"is_uploaded": false}
+		response := utils.ApiResponse("failed to save image", http.StatusBadRequest, "error", errorsMessage)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	errorsMessage := gin.H{"is_uploaded": true}
+	response := utils.ApiResponse("success upload campaign image", http.StatusOK, "success", errorsMessage)
 	c.JSON(http.StatusOK, response)
 }
