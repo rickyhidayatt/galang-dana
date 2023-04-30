@@ -27,7 +27,7 @@ func main() {
 
 	//TRANSACTION
 	repoTransaction := repository.NewTransactionRepository(db)
-	transactionUseCase := usecase.NewTransactionUseCase(repoTransaction)
+	transactionUseCase := usecase.NewTransactionUseCase(repoTransaction, repoCampaign)
 	transactionHandler := handler.TransactionHandler(transactionUseCase)
 
 	router := gin.Default()

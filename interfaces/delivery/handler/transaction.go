@@ -3,7 +3,9 @@ package handler
 import (
 	"net/http"
 
+	"github.com/galang-dana/domain/formatter"
 	"github.com/galang-dana/domain/input"
+	"github.com/galang-dana/domain/model"
 	"github.com/galang-dana/domain/usecase"
 	"github.com/galang-dana/utils"
 	"github.com/gin-gonic/gin"
@@ -27,6 +29,9 @@ func (h *transactionHandler) GetCampaignTransaction(c *gin.Context) {
 		return
 	}
 
+	currentUser := c.MustGet("currentUser").(model.User)
+	input.User = currentUser
+
 	transaction, err := h.transactionUsecase.GetTransactionByID(input)
 	if err != nil {
 		response := utils.ApiResponse("error get campaign transaction id", http.StatusBadRequest, "error", err.Error())
@@ -34,6 +39,6 @@ func (h *transactionHandler) GetCampaignTransaction(c *gin.Context) {
 		return
 	}
 
-	response := utils.ApiResponse("Transaction Detail", http.StatusOK, "success", transaction)
+	response := utils.ApiResponse("Transaction Detail", http.StatusOK, "success", formatter.FormatCampaignTransactions(transaction))
 	c.JSON(http.StatusOK, response)
 }
