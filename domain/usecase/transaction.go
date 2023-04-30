@@ -10,6 +10,7 @@ import (
 
 type TransactionUseCase interface {
 	GetTransactionByID(campaignID input.GetCampaignTransaction) ([]model.Transaction, error)
+	GetTransactionByUserID(userID string) ([]model.Transaction, error)
 }
 
 type transactionUseCase struct {
@@ -38,5 +39,12 @@ func (u *transactionUseCase) GetTransactionByID(campaignID input.GetCampaignTran
 	}
 
 	return transaction, nil
+}
 
+func (u *transactionUseCase) GetTransactionByUserID(userID string) ([]model.Transaction, error) {
+	transactions, err := u.TransactionRepo.GetByUserID(userID)
+	if err != nil {
+		return transactions, err
+	}
+	return transactions, nil
 }

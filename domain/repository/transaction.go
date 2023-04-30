@@ -7,6 +7,7 @@ import (
 
 type TransactionRepository interface {
 	GetByCampaignID(campaignID string) ([]model.Transaction, error)
+	GetByUserID(userID string) ([]model.Transaction, error)
 }
 
 type transactionRepository struct {
@@ -33,5 +34,17 @@ func (r *transactionRepository) GetByCampaignID(campaignID string) ([]model.Tran
 		}
 		transaction[i].User = user
 	}
+	return transaction, nil
+}
+
+func (r *transactionRepository) GetByUserID(userID string) ([]model.Transaction, error) {
+	var transaction []model.Transaction
+
+	err := r.db.Preload("Campaign.Images", "images.is_primary = true").Where("user_id = ?", userID).Order("created_at desc").Find(&transaction).Error
+
+	if err != nil {
+		return transaction, err
+	}
+
 	return transaction, nil
 }

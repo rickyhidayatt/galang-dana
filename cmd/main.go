@@ -13,6 +13,7 @@ import (
 func main() {
 
 	db, _ := database.Connect()
+
 	repo := repository.NewUserRepository(db)
 
 	//USER
@@ -49,6 +50,7 @@ func main() {
 
 	// transaction ENDPOINT
 	api.GET("/campaigns/:id/transactions", middleware.AuthMiddleware(auth, user), transactionHandler.GetCampaignTransaction)
+	api.GET("/transactions", middleware.AuthMiddleware(auth, user), transactionHandler.GetUserTransactions)
 
 	api.GET("/")
 
