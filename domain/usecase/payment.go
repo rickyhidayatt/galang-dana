@@ -22,8 +22,8 @@ func NewPaymentUseCase(t repository.TransactionRepository, c repository.Campaign
 
 func (u *paymentUsecase) GetPaymentURL(transaction model.Transaction, user model.User) (string, error) {
 	midclient := midtrans.NewClient()
-	midclient.ServerKey = "ambil di midtrans key nya" //server key di acount midtrans
-	midclient.ClientKey = "ambil di midtrans key nya" //clirny key di acount midtrans
+	midclient.ServerKey = "AMBIL DARI MIDTRANS" //server key di acount midtrans
+	midclient.ClientKey = "AMBIL DARI MIDTRANS" //clirny key di acount midtrans
 	midclient.APIEnvType = midtrans.Sandbox
 
 	var snapGateway midtrans.SnapGateway
@@ -50,7 +50,6 @@ func (u *paymentUsecase) GetPaymentURL(transaction model.Transaction, user model
 }
 
 func (u *paymentUsecase) ProcessPayment(input input.TransactionNotificationInput) error {
-	// transactionID := input.OrderID
 	transaction, err := u.transactionRepo.GetByID(input.OrderID)
 	if err != nil {
 		return err
@@ -83,5 +82,4 @@ func (u *paymentUsecase) ProcessPayment(input input.TransactionNotificationInput
 		}
 	}
 	return nil
-
 }
