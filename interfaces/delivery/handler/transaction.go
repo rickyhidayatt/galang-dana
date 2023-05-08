@@ -13,10 +13,11 @@ import (
 
 type transactionHandler struct {
 	transactionUsecase usecase.TransactionUseCase
+	paymentUsecase     usecase.PaymentUseCase
 }
 
-func TransactionHandler(transactionUC usecase.TransactionUseCase) *transactionHandler {
-	return &transactionHandler{transactionUC}
+func TransactionHandler(transactionUC usecase.TransactionUseCase, paymentUC usecase.PaymentUseCase) *transactionHandler {
+	return &transactionHandler{transactionUC, paymentUC}
 }
 
 func (h *transactionHandler) GetCampaignTransaction(c *gin.Context) {
@@ -78,4 +79,21 @@ func (h *transactionHandler) CreateTransaction(c *gin.Context) {
 	}
 	response := utils.ApiResponse("transaction success", http.StatusOK, "success", formatter.FormatTransaction(newTransaction))
 	c.JSON(http.StatusOK, response)
+}
+
+func (h *transactionHandler) GetNotification(c *gin.Context) {
+	var input input.TransactionNotificationInput
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		response := utils.ApiResponse("failed to process notification", http.StatusBadRequest, "error", err.Error())
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+	err = h.paymentUsecase.ProcessPayment(input)
+	if err != nil {
+		response := utils.ApiResponse("failed to process notification", http.StatusBadRequest, "error", err.Error())
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+	c.JSON(http.StatusOK, input)
 }

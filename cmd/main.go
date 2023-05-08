@@ -27,10 +27,11 @@ func main() {
 	campaignHandler := handler.CampaignHandler(CampaignUsecase)
 
 	//TRANSACTION
-	paymentUseCase := usecase.NewPaymentUseCase()
 	repoTransaction := repository.NewTransactionRepository(db)
+
+	paymentUseCase := usecase.NewPaymentUseCase(repoTransaction, repoCampaign)
 	transactionUseCase := usecase.NewTransactionUseCase(repoTransaction, repoCampaign, paymentUseCase)
-	transactionHandler := handler.TransactionHandler(transactionUseCase)
+	transactionHandler := handler.TransactionHandler(transactionUseCase, paymentUseCase)
 
 	// uid, _ := user.GetUserById("b20457abec1c4773a3ac3010a1114992")
 	// input := input.CreateTransactionInput{
@@ -72,6 +73,7 @@ func main() {
 	api.GET("/campaigns/:id/transactions", middleware.AuthMiddleware(auth, user), transactionHandler.GetCampaignTransaction)
 	api.GET("/transactions", middleware.AuthMiddleware(auth, user), transactionHandler.GetUserTransactions)
 	api.POST("/transactions", middleware.AuthMiddleware(auth, user), transactionHandler.CreateTransaction)
+	api.POST("/transactions/notification", transactionHandler.GetNotification)
 
 	api.GET("/")
 
