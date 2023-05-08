@@ -8,6 +8,8 @@ import (
 type TransactionRepository interface {
 	GetByCampaignID(campaignID string) ([]model.Transaction, error)
 	GetByUserID(userID string) ([]model.Transaction, error)
+	Save(transaction model.Transaction) (model.Transaction, error)
+	Update(transaction model.Transaction) (model.Transaction, error)
 }
 
 type transactionRepository struct {
@@ -46,5 +48,21 @@ func (r *transactionRepository) GetByUserID(userID string) ([]model.Transaction,
 		return transaction, err
 	}
 
+	return transaction, nil
+}
+
+func (r *transactionRepository) Save(transaction model.Transaction) (model.Transaction, error) {
+	err := r.db.Create(&transaction).Error
+	if err != nil {
+		return transaction, err
+	}
+	return transaction, nil
+}
+
+func (r *transactionRepository) Update(transaction model.Transaction) (model.Transaction, error) {
+	err := r.db.Save(&transaction).Error
+	if err != nil {
+		return transaction, err
+	}
 	return transaction, nil
 }

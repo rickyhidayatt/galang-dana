@@ -27,9 +27,28 @@ func main() {
 	campaignHandler := handler.CampaignHandler(CampaignUsecase)
 
 	//TRANSACTION
+	paymentUseCase := usecase.NewPaymentUseCase()
 	repoTransaction := repository.NewTransactionRepository(db)
-	transactionUseCase := usecase.NewTransactionUseCase(repoTransaction, repoCampaign)
+	transactionUseCase := usecase.NewTransactionUseCase(repoTransaction, repoCampaign, paymentUseCase)
 	transactionHandler := handler.TransactionHandler(transactionUseCase)
+
+	// uid, _ := user.GetUserById("b20457abec1c4773a3ac3010a1114992")
+	// input := input.CreateTransactionInput{
+	// 	CampaignID: "tse12",
+	// 	Amount:     200000,
+	// 	User:       uid,
+	// }
+
+	// _, err := transactionUseCase.CreateTransaction(input)
+	// if err != nil {
+	// 	fmt.Println("ERORRRRR CUKKKK")
+	// 	fmt.Println("ERORRRRR CUKKKK")
+	// 	fmt.Println("ERORRRRR CUKKKK")
+	// } else {
+	// 	fmt.Println("Berhasil Cok")
+	// 	fmt.Println("Berhasil Cok")
+	// 	fmt.Println("Berhasil Cok")
+	// }
 
 	router := gin.Default()
 	router.Static("/images", "../images")
@@ -49,8 +68,10 @@ func main() {
 	api.POST("/campaign-images", middleware.AuthMiddleware(auth, user), campaignHandler.UploadImage)
 
 	// transaction ENDPOINT
+
 	api.GET("/campaigns/:id/transactions", middleware.AuthMiddleware(auth, user), transactionHandler.GetCampaignTransaction)
 	api.GET("/transactions", middleware.AuthMiddleware(auth, user), transactionHandler.GetUserTransactions)
+	api.POST("/transactions", middleware.AuthMiddleware(auth, user), transactionHandler.CreateTransaction)
 
 	api.GET("/")
 
