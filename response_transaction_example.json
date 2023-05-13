@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "message": "Transaction Detail",
+    "code": 200,
+    "status": "success"
+  },
+  "data": [
+    {
+      "id": "test",
+      "status": "terbayar",
+      "amount": 1000,
+      "created_at": "0001-01-01T00:00:00Z",
+      "campaign": {
+        "name": "Bantu Bencana Alam Lampung",
+        "image_url": "gambar2.jpg"
+      }
+    },
+    {
+      "id": "test2",
+      "status": "hutang",
+      "amount": 2000,
+      "created_at": "0001-01-01T00:00:00Z",
+      "campaign": {
+        "name": "test id benar dengan user id",
+        "image_url": "../images/f243c33d14244256bb122a5015834e15-kayakamu.png"
+      }
+    },
+    {
+      "id": "1ed1fe5b04034d03afb83f44460df251",
+      "status": "pending",
+      "amount": 30000,
+      "created_at": "2023-05-08T00:00:00Z",
+      "campaign": {
+        "name": "campaign adi nusa",
+        "image_url": "../images/f243c33d14244256bb122a5015834e15-kayakamu.png"
+      }
+    },
+    {
+      "id": "04d7fa89c83e4cf2ac5cf2eaeb8f734e",
+      "status": "pending",
+      "amount": 30000,
+      "created_at": "2023-05-08T00:00:00Z",
+      "campaign": {
+        "name": "test id benar dengan user id",
+        "image_url": "../images/f243c33d14244256bb122a5015834e15-kayakamu.png"
+      }
+    },
+    {
+      "id": "ea778063978d401dbababe5d8ffc405c",
+      "status": "pending",
+      "amount": 1234566,
+      "created_at": "2023-05-08T00:00:00Z",
+      "campaign": {
+        "name": "test id benar dengan user id",
+        "image_url": "../images/f243c33d14244256bb122a5015834e15-kayakamu.png"
+      }
+    },
+    {
+      "id": "3094ef692da548b7b2cfd7b41ee74eb5",
+      "status": "paid",
+      "amount": 129393,
+      "created_at": "2023-05-08T00:00:00Z",
+      "campaign": {
+        "name": "test id benar dengan user id",
+        "image_url": "../images/f243c33d14244256bb122a5015834e15-kayakamu.png"
+      }
+    },
+    {
+      "id": "9ecac76ee26641248c07a08095090ab0",
+      "status": "pending",
+      "amount": 111000,
+      "created_at": "2023-05-08T00:00:00Z",
+      "campaign": {
+        "name": "test id benar dengan user id",
+        "image_url": "../images/f243c33d14244256bb122a5015834e15-kayakamu.png"
+      }
+    },
+    {
+      "id": "caafa6e8079f4ffc9942c0425934d742",
+      "status": "pending",
+      "amount": 111000,
+      "created_at": "2023-05-08T00:00:00Z",
+      "campaign": {
+        "name": "test id benar dengan user id",
+        "image_url": "../images/f243c33d14244256bb122a5015834e15-kayakamu.png"
+      }
+    }
+  ]
+}
