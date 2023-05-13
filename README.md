@@ -18,6 +18,10 @@ Pada API ini, juga sudah diterapkan sistem authorization (otorisasi) untuk menga
 - Transaksi
 - Buat Campaign
 
+## Database Design
+
+![image.png]({https://drive.google.com/file/d/1kaBecuDbMgxCI5o36ogSiUJKpZqC9Gh0/view})
+
 ## Instalasi
 
 - Siapkan file .env dalam folder cmd
