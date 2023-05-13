@@ -51,7 +51,7 @@ func Run() {
 	api.PUT("/campaigns/:id", middleware.AuthMiddleware(auth, user), campaignHandler.UpdateCampaign)
 	api.POST("/campaign-images", middleware.AuthMiddleware(auth, user), campaignHandler.UploadImage)
 
-	// transaction ENDPOINT
+	// transaction Endpoint
 	api.GET("/campaigns/:id/transactions", middleware.AuthMiddleware(auth, user), transactionHandler.GetCampaignTransaction)
 	api.GET("/transactions", middleware.AuthMiddleware(auth, user), transactionHandler.GetUserTransactions)
 	api.POST("/transactions", middleware.AuthMiddleware(auth, user), transactionHandler.CreateTransaction)

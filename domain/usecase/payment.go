@@ -1,6 +1,9 @@
 package usecase
 
 import (
+	"os"
+
+	"github.com/galang-dana/config"
 	"github.com/galang-dana/domain/input"
 	"github.com/galang-dana/domain/model"
 	"github.com/galang-dana/domain/repository"
@@ -22,8 +25,14 @@ func NewPaymentUseCase(t repository.TransactionRepository, c repository.Campaign
 
 func (u *paymentUsecase) GetPaymentURL(transaction model.Transaction, user model.User) (string, error) {
 	midclient := midtrans.NewClient()
-	midclient.ServerKey = "AMBIL DARI MIDTRANS" //server key di acount midtrans
-	midclient.ClientKey = "AMBIL DARI MIDTRANS" //clirny key di acount midtrans
+
+	config.ReloadEnv()
+	serverKey := os.Getenv("ServerKey")
+	clientKey := os.Getenv("ClientKey")
+
+	midclient.ServerKey = serverKey
+	midclient.ClientKey = clientKey
+
 	midclient.APIEnvType = midtrans.Sandbox
 
 	var snapGateway midtrans.SnapGateway
