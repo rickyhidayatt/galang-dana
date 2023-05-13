@@ -16,6 +16,19 @@ Pada API ini, juga sudah diterapkan sistem authorization (otorisasi) untuk menga
 - Transaksi
 - Buat Campaign
 
+## Instalasi
+
+- Siapkan file .env dalam folder cmd
+
+DB_USER=
+DB_PASS=
+DB_HOST=
+DB_PORT=
+DB_NAME=
+
+ServerKey = server key dari api key midtrans
+ClientKey = client key dari api key midtrans
+
 ## Run Program
 
 ```sh
