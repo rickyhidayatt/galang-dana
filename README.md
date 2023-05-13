@@ -1,8 +1,8 @@
 ## _Proyek Golang Rest API_
 
-<h1>ON GOING DEVELOPMENT BRANCH</h1>
 Proyek ini merupakan aplikasi web funding yang menggunakan bahasa pemrograman Golang untuk membuat API.
 Beberapa teknologi yang digunakan dalam proyek ini antara lain:
+
 <p>
 
 - Golang
